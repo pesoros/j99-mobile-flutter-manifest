@@ -17,6 +17,7 @@ import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:j99_mobile_manifest_flutter/widget/scanqr_widget.dart';
 import 'package:pdf_render/pdf_render.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class BagasiScreen extends StatefulWidget {
   @override
@@ -134,7 +135,7 @@ class _BagasiScreenState extends State<BagasiScreen> {
             ],
           ),
         ),
-        floatingActionButton: floatingButton(context),
+        floatingActionButton: _getFAB(),
       ),
     );
   }
@@ -304,24 +305,23 @@ class _BagasiScreenState extends State<BagasiScreen> {
               children: [
                 SlidableAction(
                   onPressed: (context) async {
-                    await BagasiCheckin.list(bagasi.code);
-                    // if (_connected) {
-                    //   printTicket(bagasi.code);
-                    // } else {
-                    //   Fluttertoast.showToast(
-                    //     msg: "Nyalakan Bluetooth",
-                    //     toastLength: Toast.LENGTH_LONG,
-                    //     fontSize: CustomSize.textS,
-                    //     backgroundColor: Colors.red,
-                    //     textColor: Colors.white,
-                    //   );
-                    // }
+                    await BagasiCheckin.list(bagasi.code, "1");
                     getBagasiList();
                   },
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                   icon: Icons.arrow_forward_ios,
                   label: 'Masuk',
+                ),
+                SlidableAction(
+                  onPressed: (context) async {
+                    await BagasiCheckin.list(bagasi.code, "2");
+                    getBagasiList();
+                  },
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.red,
+                  icon: Icons.arrow_back_ios,
+                  label: 'Keluar',
                 ),
               ],
             ),
@@ -412,16 +412,41 @@ class _BagasiScreenState extends State<BagasiScreen> {
     );
   }
 
-  floatingButton(BuildContext context) {
-    return FloatingActionButton(
+  _getFAB() {
+    return SpeedDial(
+      overlayColor: Colors.black,
+      animatedIcon: AnimatedIcons.menu_home,
+      animatedIconTheme: IconThemeData(size: 22),
       backgroundColor: Colors.white,
-      child: Icon(
-        Icons.qr_code,
-        color: Colors.black,
-      ),
-      onPressed: () {
-        _addCheckin(context);
-      },
+      foregroundColor: Colors.black,
+      visible: true,
+      curve: Curves.bounceIn,
+      children: [
+        SpeedDialChild(
+            child: Icon(Icons.qr_code),
+            backgroundColor: Colors.white,
+            onTap: () {
+              _addCheckin(context);
+            },
+            label: 'Checkin',
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 16.0),
+            labelBackgroundColor: Colors.white),
+        SpeedDialChild(
+            child: Icon(Icons.qr_code),
+            backgroundColor: Colors.white,
+            onTap: () {
+              _addCheckout(context);
+            },
+            label: 'Checkout',
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 16.0),
+            labelBackgroundColor: Colors.white)
+      ],
     );
   }
 
@@ -510,7 +535,7 @@ class _BagasiScreenState extends State<BagasiScreen> {
                           ),
                         ).then(
                           (value) async {
-                            await BagasiCheckin.list(value);
+                            await BagasiCheckin.list(value, "1");
                             Navigator.pop(context);
                             getBagasiList();
                           },
@@ -543,7 +568,140 @@ class _BagasiScreenState extends State<BagasiScreen> {
                             backgroundColor: Colors.red,
                           );
                         } else {
-                          await BagasiCheckin.list(ticketNumber.text);
+                          await BagasiCheckin.list(ticketNumber.text, "1");
+                          ticketNumber.text = "";
+                          getBagasiList();
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
+
+  _addCheckout(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(child: __addCheckout(context));
+      },
+    );
+  }
+
+  __addCheckout(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+        ),
+        padding: MediaQuery.of(context).viewInsets,
+        child: Padding(
+          padding: EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 30),
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 20),
+                    child: Container(
+                      height: 5,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.black26,
+                          borderRadius: BorderRadius.all(Radius.circular(7))),
+                    ),
+                  ),
+                  SizedBox(
+                    child: TextField(
+                      controller: ticketNumber,
+                      decoration: InputDecoration(
+                        labelText: 'Nomor Tiket',
+                        labelStyle: TextStyle(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1, color: Colors.black26),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1, color: Colors.black26),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: GestureDetector(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 3.5,
+                        height: 70,
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: Center(
+                            child: Icon(
+                          Icons.qr_code,
+                          color: Colors.white,
+                        )),
+                      ),
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => ScanQRWidget(),
+                          ),
+                        ).then(
+                          (value) async {
+                            await BagasiCheckin.list(value, "2");
+                            Navigator.pop(context);
+                            getBagasiList();
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    child: GestureDetector(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: 70,
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: Center(
+                            child: Text(
+                          "Check-Out",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        )),
+                      ),
+                      onTap: () async {
+                        if (ticketNumber.text == "") {
+                          Fluttertoast.showToast(
+                            msg: "Isi Nomor Tiket",
+                            gravity: ToastGravity.CENTER,
+                            backgroundColor: Colors.red,
+                          );
+                        } else {
+                          await BagasiCheckin.list(ticketNumber.text, "2");
                           ticketNumber.text = "";
                           getBagasiList();
                           Navigator.pop(context);

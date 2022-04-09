@@ -382,7 +382,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                   },
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
-                  icon: Icons.arrow_forward_ios,
+                  icon: Icons.print,
                   label: 'Print Tiket',
                 ),
                 (passengger.baggage == "Bawa")
@@ -403,7 +403,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                         },
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.red,
-                        icon: Icons.arrow_forward_ios,
+                        icon: Icons.print,
                         label: 'Print Bagasi',
                       )
                     : SizedBox(),
@@ -429,7 +429,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                   },
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.red,
-                  icon: Icons.arrow_forward_ios,
+                  icon: Icons.arrow_back_ios,
                   label: 'Keluar',
                 ),
               ],
