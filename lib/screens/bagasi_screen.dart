@@ -37,7 +37,6 @@ class _BagasiScreenState extends State<BagasiScreen> {
   void initState() {
     super.initState();
     getBagasiList();
-    bluetoothPrint.startScan(timeout: Duration(seconds: 4));
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
   }
 
@@ -51,7 +50,7 @@ class _BagasiScreenState extends State<BagasiScreen> {
   }
 
   initBluetooth() async {
-    bluetoothPrint.startScan(timeout: Duration(seconds: 4));
+    bluetoothPrint.startScan(timeout: Duration(seconds: 1));
 
     bool isConnected = await bluetoothPrint.isConnected;
 
@@ -249,6 +248,18 @@ class _BagasiScreenState extends State<BagasiScreen> {
         Row(
           children: [
             Container(
+              child: IconButton(
+                icon: Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                onPressed: () {
+                  initBluetooth();
+                },
+              ),
+            ),
+            Container(
               child: OutlinedButton(
                 child: Text(
                   'Connect',
@@ -294,17 +305,17 @@ class _BagasiScreenState extends State<BagasiScreen> {
                 SlidableAction(
                   onPressed: (context) async {
                     await BagasiCheckin.list(bagasi.code);
-                    if (_connected) {
-                      printTicket(bagasi.code);
-                    } else {
-                      Fluttertoast.showToast(
-                        msg: "Nyalakan Bluetooth",
-                        toastLength: Toast.LENGTH_LONG,
-                        fontSize: CustomSize.textS,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                      );
-                    }
+                    // if (_connected) {
+                    //   printTicket(bagasi.code);
+                    // } else {
+                    //   Fluttertoast.showToast(
+                    //     msg: "Nyalakan Bluetooth",
+                    //     toastLength: Toast.LENGTH_LONG,
+                    //     fontSize: CustomSize.textS,
+                    //     backgroundColor: Colors.red,
+                    //     textColor: Colors.white,
+                    //   );
+                    // }
                     getBagasiList();
                   },
                   backgroundColor: Colors.red,
@@ -405,7 +416,7 @@ class _BagasiScreenState extends State<BagasiScreen> {
     return FloatingActionButton(
       backgroundColor: Colors.white,
       child: Icon(
-        Icons.add,
+        Icons.qr_code,
         color: Colors.black,
       ),
       onPressed: () {
@@ -500,17 +511,6 @@ class _BagasiScreenState extends State<BagasiScreen> {
                         ).then(
                           (value) async {
                             await BagasiCheckin.list(value);
-                            if (_connected) {
-                              printTicket(value);
-                            } else {
-                              Fluttertoast.showToast(
-                                msg: "Nyalakan Bluetooth",
-                                toastLength: Toast.LENGTH_LONG,
-                                fontSize: CustomSize.textS,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                              );
-                            }
                             Navigator.pop(context);
                             getBagasiList();
                           },
@@ -544,17 +544,6 @@ class _BagasiScreenState extends State<BagasiScreen> {
                           );
                         } else {
                           await BagasiCheckin.list(ticketNumber.text);
-                          if (_connected) {
-                            printTicket(ticketNumber.text);
-                          } else {
-                            Fluttertoast.showToast(
-                              msg: "Nyalakan Bluetooth",
-                              toastLength: Toast.LENGTH_LONG,
-                              fontSize: CustomSize.textS,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                            );
-                          }
                           ticketNumber.text = "";
                           getBagasiList();
                           Navigator.pop(context);

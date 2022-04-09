@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class PassenggerCheckin {
-  static list(String ticketNumber) async {
+  static list(String ticketNumber, String status) async {
     String url = dotenv.env['BASE_URL'] + "/manifest/checkin/set";
 
     Uri parseUrl = Uri.parse(
@@ -14,7 +14,7 @@ class PassenggerCheckin {
       "Content-Type": "application/x-www-form-urlencoded"
     }, body: {
       "ticketNumber": ticketNumber,
-      "status": "1",
+      "status": status,
     });
 
     return jsonDecode(response.body);

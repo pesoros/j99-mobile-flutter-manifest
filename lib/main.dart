@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Juragan99 Trans Manifest',
+      title: 'Juragan99Trans Manifest',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),

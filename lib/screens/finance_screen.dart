@@ -131,15 +131,15 @@ class _FinanceScreenState extends State<FinanceScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Allowance: " + rupiah(allowance),
+                      "Uang Saku: " + rupiah(allowance),
                       style: TextStyle(fontSize: CustomSize.textS),
                     ),
                     Text(
-                      "Expanse: " + rupiah(total_income),
+                      "Pengeluaran: " + rupiah(total_income),
                       style: TextStyle(fontSize: CustomSize.textS),
                     ),
                     Text(
-                      "Income: " + rupiah(total_spend),
+                      "Pemasukan: " + rupiah(total_spend),
                       style: TextStyle(fontSize: CustomSize.textS),
                     ),
                   ],
@@ -326,6 +326,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                   ),
                   SizedBox(
                     child: TextField(
+                      keyboardType: TextInputType.number,
                       controller: nominalController,
                       decoration: InputDecoration(
                         labelText: 'Nominal',

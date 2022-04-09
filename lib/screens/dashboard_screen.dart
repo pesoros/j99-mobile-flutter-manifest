@@ -50,13 +50,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Nyalakan Bluetooth!'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('Biar Ariel Tatum seneng'),
-              ],
-            ),
-          ),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
@@ -175,44 +168,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ))
             ],
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           Container(
             padding: EdgeInsets.all(15),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-                color: Colors.white24,
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/images/blurred.jpg')),
                 borderRadius: BorderRadius.all(Radius.circular(15))),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Rute: " + route.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 Text("No. Registrasi: " + reg_no.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 Text("No. Polisi: " + nopol.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 Text("Brand: " + brand.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 Text("Kelas: " + type_class.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 Text("Restaurant: " + resto_name.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 Text("Driver: " + driver.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 Text("Assitant : " + assistant_1.toUpperCase(),
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.black)),
                 (assistant_2 == "" || assistant_2 == null)
                     ? SizedBox()
                     : Text("Assitant : " + assistant_2.toUpperCase(),
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.black)),
                 (assistant_3 == "" || assistant_3 == null)
                     ? SizedBox()
                     : Text("Assitant : " + assistant_3.toUpperCase(),
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.black)),
               ],
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           GestureDetector(
             child: Container(
               height: 50,

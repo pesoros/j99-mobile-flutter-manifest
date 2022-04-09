@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +20,7 @@ import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:pdf_render/pdf_render.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class CheckinScreen extends StatefulWidget {
   @override
@@ -57,7 +57,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
   }
 
   initBluetooth() async {
-    bluetoothPrint.startScan(timeout: Duration(seconds: 4));
+    bluetoothPrint.startScan(timeout: Duration(seconds: 1));
 
     bool isConnected = await bluetoothPrint.isConnected;
 
@@ -145,12 +145,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
         content: base64Image,
       ));
       await bluetoothPrint.printReceipt(config, list);
-      secondPrintTicket(code);
     }
   }
 
   secondPrintTicket(String code) async {
-    await secondPrintTicketModal();
     String url = dotenv.env['BASE_URL'] + "/print/ticket/thermal?code=" + code;
     Uri parseUrl = Uri.parse(url);
     final response = await http.get(parseUrl);
@@ -158,97 +156,51 @@ class _CheckinScreenState extends State<CheckinScreen> {
     PdfDocument doc = await PdfDocument.openData(response.bodyBytes);
     int pageCount = doc.pageCount;
 
-    if (secondPrint) {
-      PdfPage page = await doc.getPage(2);
-      PdfPageImage pageImage = await page.render(
-        backgroundFill: true,
-        width: 2000,
-        height: 4000,
-        fullWidth: 2000,
-        fullHeight: 4000,
-      );
-      var img = await pageImage.createImageIfNotAvailable();
+    PdfPage page = await doc.getPage(2);
+    PdfPageImage pageImage = await page.render(
+      backgroundFill: true,
+      width: 2000,
+      height: 4000,
+      fullWidth: 2000,
+      fullHeight: 4000,
+    );
+    var img = await pageImage.createImageIfNotAvailable();
 
-      Map<String, dynamic> config = Map();
-      List<LineText> list = List();
+    Map<String, dynamic> config = Map();
+    List<LineText> list = List();
 
-      ByteData imagedata = await img.toByteData(format: ImageByteFormat.png);
-      List<int> imageBytes = imagedata.buffer
-          .asUint8List(imagedata.offsetInBytes, imagedata.lengthInBytes);
-      String base64Image = base64Encode(imageBytes);
-      list.add(LineText(
-        type: LineText.TYPE_IMAGE,
-        content: base64Image,
-      ));
-      await bluetoothPrint.printReceipt(config, list);
-      setState(() {
-        secondPrint = false;
-      });
-    }
-  }
-
-  secondPrintTicketModal() async {
-    await showDialog(
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: Text('Print Tiket Bagasi?'),
-            actions: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        secondPrint = false;
-                      });
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      "Tidak",
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        secondPrint = true;
-                      });
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      "Ya",
-                    ),
-                  ),
-                ],
-              )
-            ],
-          );
-        });
+    ByteData imagedata = await img.toByteData(format: ImageByteFormat.png);
+    List<int> imageBytes = imagedata.buffer
+        .asUint8List(imagedata.offsetInBytes, imagedata.lengthInBytes);
+    String base64Image = base64Encode(imageBytes);
+    list.add(LineText(
+      type: LineText.TYPE_IMAGE,
+      content: base64Image,
+    ));
+    await bluetoothPrint.printReceipt(config, list);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: headerWidget(context),
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(color: Colors.black),
-          child: Column(
-            children: [
-              selectPrintWidget(context),
-              Expanded(
-                child: (isLoading)
-                    ? Center(child: CircularProgressIndicator())
-                    : bodyWidget(context),
+        child: Scaffold(
+            appBar: headerWidget(context),
+            body: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(color: Colors.black),
+              child: Column(
+                children: [
+                  selectPrintWidget(context),
+                  Expanded(
+                    child: (isLoading)
+                        ? Center(child: CircularProgressIndicator())
+                        : bodyWidget(context),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        floatingActionButton: floatingButton(context),
-      ),
-    );
+            ),
+            floatingActionButton: _getFAB()));
   }
 
   headerWidget(BuildContext context) {
@@ -360,6 +312,18 @@ class _CheckinScreenState extends State<CheckinScreen> {
         Row(
           children: [
             Container(
+              child: IconButton(
+                icon: Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                onPressed: () {
+                  initBluetooth();
+                },
+              ),
+            ),
+            Container(
               child: OutlinedButton(
                 child: Text(
                   'Connect',
@@ -399,12 +363,11 @@ class _CheckinScreenState extends State<CheckinScreen> {
       itemBuilder: (context, index) {
         PassenggerModel passengger = _listPassengger[index];
         return Slidable(
-            endActionPane: ActionPane(
+            startActionPane: ActionPane(
               motion: ScrollMotion(),
               children: [
                 SlidableAction(
                   onPressed: (context) async {
-                    await PassenggerCheckin.list(passengger.ticket_number);
                     if (_connected) {
                       printTicket(passengger.ticket_number);
                     } else {
@@ -416,12 +379,58 @@ class _CheckinScreenState extends State<CheckinScreen> {
                         textColor: Colors.white,
                       );
                     }
+                  },
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  icon: Icons.arrow_forward_ios,
+                  label: 'Print Tiket',
+                ),
+                (passengger.baggage == "Bawa")
+                    ? SlidableAction(
+                        onPressed: (context) async {
+                          if (_connected) {
+                            secondPrintTicket(passengger.ticket_number);
+                            print("2");
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: "Nyalakan Bluetooth",
+                              toastLength: Toast.LENGTH_LONG,
+                              fontSize: CustomSize.textS,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                            );
+                          }
+                        },
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.red,
+                        icon: Icons.arrow_forward_ios,
+                        label: 'Print Bagasi',
+                      )
+                    : SizedBox(),
+              ],
+            ),
+            endActionPane: ActionPane(
+              motion: ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) async {
+                    await PassenggerCheckin.list(passengger.ticket_number, "1");
                     getPassanggerList();
                   },
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                   icon: Icons.arrow_forward_ios,
                   label: 'Masuk',
+                ),
+                SlidableAction(
+                  onPressed: (context) async {
+                    await PassenggerCheckin.list(passengger.ticket_number, "2");
+                    getPassanggerList();
+                  },
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.red,
+                  icon: Icons.arrow_forward_ios,
+                  label: 'Keluar',
                 ),
               ],
             ),
@@ -511,7 +520,13 @@ class _CheckinScreenState extends State<CheckinScreen> {
                       checkin_status,
                       style: TextStyle(
                         fontSize: CustomSize.textS,
-                        color: Colors.red,
+                        color: (checkin_status == "Menunggu")
+                            ? Colors.red
+                            : (checkin_status == "Sudah Masuk")
+                                ? Colors.green
+                                : (checkin_status == "Sudah Sampai")
+                                    ? Colors.grey
+                                    : Colors.white,
                       ),
                     )
                   ],
@@ -524,16 +539,41 @@ class _CheckinScreenState extends State<CheckinScreen> {
     );
   }
 
-  floatingButton(BuildContext context) {
-    return FloatingActionButton(
+  _getFAB() {
+    return SpeedDial(
+      overlayColor: Colors.black,
+      animatedIcon: AnimatedIcons.menu_home,
+      animatedIconTheme: IconThemeData(size: 22),
       backgroundColor: Colors.white,
-      child: Icon(
-        Icons.add,
-        color: Colors.black,
-      ),
-      onPressed: () {
-        _addCheckin(context);
-      },
+      foregroundColor: Colors.black,
+      visible: true,
+      curve: Curves.bounceIn,
+      children: [
+        SpeedDialChild(
+            child: Icon(Icons.qr_code),
+            backgroundColor: Colors.white,
+            onTap: () {
+              _addCheckin(context);
+            },
+            label: 'Checkin',
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 16.0),
+            labelBackgroundColor: Colors.white),
+        SpeedDialChild(
+            child: Icon(Icons.qr_code),
+            backgroundColor: Colors.white,
+            onTap: () {
+              _addCheckout(context);
+            },
+            label: 'Checkout',
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 16.0),
+            labelBackgroundColor: Colors.white)
+      ],
     );
   }
 
@@ -622,18 +662,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                           ),
                         ).then(
                           (value) async {
-                            await PassenggerCheckin.list(value);
-                            if (_connected) {
-                              printTicket(value);
-                            } else {
-                              Fluttertoast.showToast(
-                                msg: "Nyalakan Bluetooth",
-                                toastLength: Toast.LENGTH_LONG,
-                                fontSize: CustomSize.textS,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                              );
-                            }
+                            await PassenggerCheckin.list(value, "1");
                             Navigator.pop(context);
                             getPassanggerList();
                           },
@@ -666,18 +695,140 @@ class _CheckinScreenState extends State<CheckinScreen> {
                             backgroundColor: Colors.red,
                           );
                         } else {
-                          await PassenggerCheckin.list(ticketNumber.text);
-                          if (_connected) {
-                            printTicket(ticketNumber.text);
-                          } else {
-                            Fluttertoast.showToast(
-                              msg: "Nyalakan Bluetooth",
-                              toastLength: Toast.LENGTH_LONG,
-                              fontSize: CustomSize.textS,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                            );
-                          }
+                          await PassenggerCheckin.list(ticketNumber.text, "1");
+                          ticketNumber.text = "";
+                          getPassanggerList();
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
+
+  _addCheckout(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(child: __addCheckout(context));
+      },
+    );
+  }
+
+  __addCheckout(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+        ),
+        padding: MediaQuery.of(context).viewInsets,
+        child: Padding(
+          padding: EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 30),
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 20),
+                    child: Container(
+                      height: 5,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.black26,
+                          borderRadius: BorderRadius.all(Radius.circular(7))),
+                    ),
+                  ),
+                  SizedBox(
+                    child: TextField(
+                      controller: ticketNumber,
+                      decoration: InputDecoration(
+                        labelText: 'Nomor Tiket',
+                        labelStyle: TextStyle(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1, color: Colors.black26),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1, color: Colors.black26),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: GestureDetector(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 3.5,
+                        height: 70,
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: Center(
+                            child: Icon(
+                          Icons.qr_code,
+                          color: Colors.white,
+                        )),
+                      ),
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => ScanQRWidget(),
+                          ),
+                        ).then(
+                          (value) async {
+                            await PassenggerCheckin.list(value, "2");
+                            Navigator.pop(context);
+                            getPassanggerList();
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    child: GestureDetector(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: 70,
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: Center(
+                            child: Text(
+                          "Check-Out",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        )),
+                      ),
+                      onTap: () async {
+                        if (ticketNumber.text == "") {
+                          Fluttertoast.showToast(
+                            msg: "Isi Nomor Tiket",
+                            gravity: ToastGravity.CENTER,
+                            backgroundColor: Colors.red,
+                          );
+                        } else {
+                          await PassenggerCheckin.list(ticketNumber.text, "2");
                           ticketNumber.text = "";
                           getPassanggerList();
                           Navigator.pop(context);
