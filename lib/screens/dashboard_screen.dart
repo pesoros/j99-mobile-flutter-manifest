@@ -1,10 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, non_constant_identifier_names
 import 'package:flutter/material.dart';
-import 'package:j99_mobile_manifest_flutter/controller/manifest_detil.dart';
 import 'package:j99_mobile_manifest_flutter/screens/bagasi_screen.dart';
 import 'package:j99_mobile_manifest_flutter/screens/checkin_screen.dart';
 import 'package:j99_mobile_manifest_flutter/screens/finance_screen.dart';
 import 'package:j99_mobile_manifest_flutter/screens/login_screen.dart';
+import 'package:j99_mobile_manifest_flutter/screens/manifest_detil_screen.dart';
 import 'package:j99_mobile_manifest_flutter/utils/custom.dart';
 import 'package:blur/blur.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
@@ -18,22 +18,10 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   BluetoothPrint bluetoothPrint = BluetoothPrint.instance;
 
-  String route = "";
-  String reg_no = "";
-  String nopol = "";
-  String brand = "";
-  String type_class = "";
-  String resto_name = "";
-  String driver = "";
-  String assistant_1 = "";
-  String assistant_2 = "";
-  String assistant_3 = "";
-
   @override
   void initState() {
     super.initState();
     checkBluetooth();
-    getManifestDetail();
   }
 
   checkBluetooth() async {
@@ -61,26 +49,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       },
     );
-  }
-
-  getManifestDetail() async {
-    await ManifestDetail.list().then((value) {
-      if (value == 404) {
-      } else {
-        setState(() {
-          route = value['route'];
-          reg_no = value['reg_no'];
-          nopol = value['nopol'];
-          brand = value['brand'];
-          type_class = value['class'];
-          resto_name = value['resto_name'];
-          driver = value['driver'];
-          assistant_1 = value['assistant_1'];
-          assistant_2 = value['assistant_2'];
-          assistant_3 = value['assistant_3'];
-        });
-      }
-    });
   }
 
   @override
@@ -169,45 +137,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
           SizedBox(height: 20),
-          Container(
-            padding: EdgeInsets.all(15),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/images/blurred.jpg')),
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Rute: " + route.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                Text("No. Registrasi: " + reg_no.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                Text("No. Polisi: " + nopol.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                Text("Brand: " + brand.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                Text("Kelas: " + type_class.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                Text("Restaurant: " + resto_name.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                Text("Driver: " + driver.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                Text("Assitant : " + assistant_1.toUpperCase(),
-                    style: TextStyle(color: Colors.black)),
-                (assistant_2 == "" || assistant_2 == null)
-                    ? SizedBox()
-                    : Text("Assitant : " + assistant_2.toUpperCase(),
-                        style: TextStyle(color: Colors.black)),
-                (assistant_3 == "" || assistant_3 == null)
-                    ? SizedBox()
-                    : Text("Assitant : " + assistant_3.toUpperCase(),
-                        style: TextStyle(color: Colors.black)),
-              ],
+          GestureDetector(
+            child: Container(
+              height: 50,
+              color: Colors.black,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.details,
+                        color: Colors.white,
+                        size: CustomSize.textXXL,
+                      ),
+                      SizedBox(width: 30),
+                      Text(
+                        "Detail Manifest",
+                        style: TextStyle(
+                          fontSize: CustomSize.textL,
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ManifestDetil(),
+                  ));
+            },
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 30),
           GestureDetector(
             child: Container(
               height: 50,

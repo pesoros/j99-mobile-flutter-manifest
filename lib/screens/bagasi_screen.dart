@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, unused_import, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use, unnecessary_new, sized_box_for_whitespace, prefer_collection_literals, unused_local_variable, await_only_futures, library_prefixes
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, unused_import, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use, unnecessary_new, sized_box_for_whitespace, prefer_collection_literals, unused_local_variable, await_only_futures, library_prefixes, unnecessary_import, unused_field
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -25,9 +25,9 @@ class BagasiScreen extends StatefulWidget {
 }
 
 class _BagasiScreenState extends State<BagasiScreen> {
-  BluetoothPrint bluetoothPrint = BluetoothPrint.instance;
+  // BluetoothPrint bluetoothPrint = BluetoothPrint.instance;
 
-  bool _connected = false;
+  // bool _connected = false;
   BluetoothDevice _device;
 
   TextEditingController ticketNumber = TextEditingController();
@@ -38,7 +38,7 @@ class _BagasiScreenState extends State<BagasiScreen> {
   void initState() {
     super.initState();
     getBagasiList();
-    WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
+    // WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
   }
 
   getBagasiList() async {
@@ -50,72 +50,72 @@ class _BagasiScreenState extends State<BagasiScreen> {
     });
   }
 
-  initBluetooth() async {
-    bluetoothPrint.startScan(timeout: Duration(seconds: 1));
+  // initBluetooth() async {
+  //   bluetoothPrint.startScan(timeout: Duration(seconds: 1));
 
-    bool isConnected = await bluetoothPrint.isConnected;
+  //   bool isConnected = await bluetoothPrint.isConnected;
 
-    bluetoothPrint.state.listen((state) {
-      setState(() {
-        _device = _device;
-      });
+  //   bluetoothPrint.state.listen((state) {
+  //     setState(() {
+  //       _device = _device;
+  //     });
 
-      switch (state) {
-        case BluetoothPrint.CONNECTED:
-          setState(() {
-            _connected = true;
-          });
-          break;
-        case BluetoothPrint.DISCONNECTED:
-          setState(() {
-            _connected = false;
-          });
-          break;
-        default:
-          break;
-      }
-    });
+  //     switch (state) {
+  //       case BluetoothPrint.CONNECTED:
+  //         setState(() {
+  //           _connected = true;
+  //         });
+  //         break;
+  //       case BluetoothPrint.DISCONNECTED:
+  //         setState(() {
+  //           _connected = false;
+  //         });
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   });
 
-    if (!mounted) return;
+  //   if (!mounted) return;
 
-    if (isConnected) {
-      setState(() {
-        _connected = true;
-      });
-    }
-  }
+  //   if (isConnected) {
+  //     setState(() {
+  //       _connected = true;
+  //     });
+  //   }
+  // }
 
-  printTicket(String code) async {
-    String url = dotenv.env['BASE_URL'] + "/print/ticket/thermal?code=" + code;
-    Uri parseUrl = Uri.parse(url);
-    final response = await http.get(parseUrl);
+  // printTicket(String code) async {
+  //   String url = dotenv.env['BASE_URL'] + "/print/ticket/thermal?code=" + code;
+  //   Uri parseUrl = Uri.parse(url);
+  //   final response = await http.get(parseUrl);
 
-    Map<String, dynamic> config = Map();
-    List<LineText> list = List();
+  //   Map<String, dynamic> config = Map();
+  //   List<LineText> list = List();
 
-    PdfDocument doc = await PdfDocument.openData(response.bodyBytes);
-    int pageCount = doc.pageCount;
-    PdfPage page = await doc.getPage(pageCount);
-    PdfPageImage pageImage = await page.render(
-      backgroundFill: true,
-      width: 2000,
-      height: 4000,
-      fullWidth: 2000,
-      fullHeight: 4000,
-    );
-    var img = await pageImage.createImageIfNotAvailable();
+  //   PdfDocument doc = await PdfDocument.openData(response.bodyBytes);
+  //   int pageCount = doc.pageCount;
+  //   PdfPage page = await doc.getPage(pageCount);
+  //   PdfPageImage pageImage = await page.render(
+  //     backgroundFill: true,
+  //     width: 2000,
+  //     height: 4000,
+  //     fullWidth: 2000,
+  //     fullHeight: 4000,
+  //   );
+  //   var img = await pageImage.createImageIfNotAvailable();
 
-    ByteData imagedata = await img.toByteData(format: ImageByteFormat.png);
-    List<int> imageBytes = imagedata.buffer
-        .asUint8List(imagedata.offsetInBytes, imagedata.lengthInBytes);
-    String base64Image = base64Encode(imageBytes);
-    list.add(LineText(
-      type: LineText.TYPE_IMAGE,
-      content: base64Image,
-    ));
+  //   ByteData imagedata = await img.toByteData(format: ImageByteFormat.png);
+  //   List<int> imageBytes = imagedata.buffer
+  //       .asUint8List(imagedata.offsetInBytes, imagedata.lengthInBytes);
+  //   String base64Image = base64Encode(imageBytes);
+  //   list.add(LineText(
+  //     type: LineText.TYPE_IMAGE,
+  //     content: base64Image,
+  //   ));
 
-    await bluetoothPrint.printReceipt(config, list);
-  }
+  //   await bluetoothPrint.printReceipt(config, list);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +128,7 @@ class _BagasiScreenState extends State<BagasiScreen> {
           decoration: BoxDecoration(color: Colors.black),
           child: Column(
             children: [
-              selectPrintWidget(context),
+              // selectPrintWidget(context),
               Expanded(
                 child: bodyWidget(context),
               ),
@@ -183,115 +183,115 @@ class _BagasiScreenState extends State<BagasiScreen> {
     );
   }
 
-  selectPrintWidget(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        (!_connected)
-            ? Container(
-                margin: EdgeInsets.only(left: 10),
-                child: StreamBuilder<List<BluetoothDevice>>(
-                    stream: bluetoothPrint.scanResults,
-                    initialData: [],
-                    builder: (context, snapshot) => DropdownButtonHideUnderline(
-                          child: DropdownButton<BluetoothDevice>(
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: CustomSize.textS),
-                            dropdownColor: Colors.red,
-                            hint: Text(
-                              "Pilih Printer",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: CustomSize.textS),
-                            ),
-                            icon: Icon(
-                              Icons.arrow_downward,
-                              size: 2,
-                              color: Colors.black,
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                _device = data;
-                              });
-                            },
-                            items: snapshot.data
-                                .map<DropdownMenuItem<BluetoothDevice>>((data) {
-                              return DropdownMenuItem<BluetoothDevice>(
-                                value: data,
-                                child: Text(data.name),
-                              );
-                            }).toList(),
-                          ),
-                        )),
-              )
-            : Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 10),
-                    padding: EdgeInsets.all(3),
-                    height: 20,
-                    width: 20,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.all(Radius.circular(50))),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    "Printer Connected",
-                    style: TextStyle(
-                        color: Colors.white, fontSize: CustomSize.textS),
-                  )
-                ],
-              ),
-        Row(
-          children: [
-            Container(
-              child: IconButton(
-                icon: Icon(
-                  Icons.refresh,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                onPressed: () {
-                  initBluetooth();
-                },
-              ),
-            ),
-            Container(
-              child: OutlinedButton(
-                child: Text(
-                  'Connect',
-                  style: TextStyle(color: Colors.green),
-                ),
-                onPressed: _connected
-                    ? null
-                    : () async {
-                        if (_device != null && _device.address != null) {
-                          await bluetoothPrint.connect(_device);
-                        } else {
-                          setState(() {});
-                        }
-                      },
-              ),
-            ),
-            Container(
-              child: OutlinedButton(
-                child: Text('Disconnect', style: TextStyle(color: Colors.red)),
-                onPressed: _connected
-                    ? () async {
-                        await bluetoothPrint.disconnect();
-                      }
-                    : null,
-              ),
-            )
-          ],
-        )
-      ],
-    );
-  }
+  // selectPrintWidget(BuildContext context) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       (!_connected)
+  //           ? Container(
+  //               margin: EdgeInsets.only(left: 10),
+  //               child: StreamBuilder<List<BluetoothDevice>>(
+  //                   stream: bluetoothPrint.scanResults,
+  //                   initialData: [],
+  //                   builder: (context, snapshot) => DropdownButtonHideUnderline(
+  //                         child: DropdownButton<BluetoothDevice>(
+  //                           style: TextStyle(
+  //                               color: Colors.white,
+  //                               fontSize: CustomSize.textS),
+  //                           dropdownColor: Colors.red,
+  //                           hint: Text(
+  //                             "Pilih Printer",
+  //                             style: TextStyle(
+  //                                 color: Colors.white,
+  //                                 fontSize: CustomSize.textS),
+  //                           ),
+  //                           icon: Icon(
+  //                             Icons.arrow_downward,
+  //                             size: 2,
+  //                             color: Colors.black,
+  //                           ),
+  //                           onChanged: (data) {
+  //                             setState(() {
+  //                               _device = data;
+  //                             });
+  //                           },
+  //                           items: snapshot.data
+  //                               .map<DropdownMenuItem<BluetoothDevice>>((data) {
+  //                             return DropdownMenuItem<BluetoothDevice>(
+  //                               value: data,
+  //                               child: Text(data.name),
+  //                             );
+  //                           }).toList(),
+  //                         ),
+  //                       )),
+  //             )
+  //           : Row(
+  //               children: [
+  //                 Container(
+  //                   margin: EdgeInsets.only(left: 10),
+  //                   padding: EdgeInsets.all(3),
+  //                   height: 20,
+  //                   width: 20,
+  //                   child: Container(
+  //                     decoration: BoxDecoration(
+  //                         color: Colors.green,
+  //                         borderRadius: BorderRadius.all(Radius.circular(50))),
+  //                   ),
+  //                 ),
+  //                 SizedBox(width: 5),
+  //                 Text(
+  //                   "Printer Connected",
+  //                   style: TextStyle(
+  //                       color: Colors.white, fontSize: CustomSize.textS),
+  //                 )
+  //               ],
+  //             ),
+  //       Row(
+  //         children: [
+  //           Container(
+  //             child: IconButton(
+  //               icon: Icon(
+  //                 Icons.refresh,
+  //                 color: Colors.white,
+  //                 size: 18,
+  //               ),
+  //               onPressed: () {
+  //                 initBluetooth();
+  //               },
+  //             ),
+  //           ),
+  //           Container(
+  //             child: OutlinedButton(
+  //               child: Text(
+  //                 'Connect',
+  //                 style: TextStyle(color: Colors.green),
+  //               ),
+  //               onPressed: _connected
+  //                   ? null
+  //                   : () async {
+  //                       if (_device != null && _device.address != null) {
+  //                         await bluetoothPrint.connect(_device);
+  //                       } else {
+  //                         setState(() {});
+  //                       }
+  //                     },
+  //             ),
+  //           ),
+  //           Container(
+  //             child: OutlinedButton(
+  //               child: Text('Disconnect', style: TextStyle(color: Colors.red)),
+  //               onPressed: _connected
+  //                   ? () async {
+  //                       await bluetoothPrint.disconnect();
+  //                     }
+  //                   : null,
+  //             ),
+  //           )
+  //         ],
+  //       )
+  //     ],
+  //   );
+  // }
 
   bodyWidget(BuildContext context) {
     return SizedBox(

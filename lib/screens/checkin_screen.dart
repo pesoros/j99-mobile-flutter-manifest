@@ -39,6 +39,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
   bool secondPrint = false;
 
+  double papperResolution = 500;
+
   @override
   void initState() {
     super.initState();
@@ -103,10 +105,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
       PdfPage page = await doc.getPage(1);
       PdfPageImage pageImage = await page.render(
         backgroundFill: true,
-        width: 2000,
-        height: 4000,
-        fullWidth: 2000,
-        fullHeight: 4000,
+        width: 500,
+        height: 1500,
+        fullWidth: 500,
+        fullHeight: 1500,
       );
       var img = await pageImage.createImageIfNotAvailable();
 
@@ -126,10 +128,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
       PdfPage page = await doc.getPage(1);
       PdfPageImage pageImage = await page.render(
         backgroundFill: true,
-        width: 2000,
-        height: 4000,
-        fullWidth: 2000,
-        fullHeight: 4000,
+        width: 500,
+        height: 1500,
+        fullWidth: 500,
+        fullHeight: 1500,
       );
       var img = await pageImage.createImageIfNotAvailable();
 
