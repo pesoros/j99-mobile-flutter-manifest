@@ -62,18 +62,21 @@ class _ManifestDetilState extends State<ManifestDetil> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black,
         appBar: headerWidget(context),
-        body: Container(
+        body: SingleChildScrollView(
+          child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(color: Colors.black),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(height: 20),
                 bodyWidget(context),
               ],
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
