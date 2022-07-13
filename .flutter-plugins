@@ -1,12 +1,12 @@
 # This is a generated file; do not edit or check into version control.
-bluetooth_print=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\bluetooth_print-3.0.1\\
-fluttertoast=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\fluttertoast-8.0.9\\
-mobile_scanner=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\mobile_scanner-1.1.0\\
-path_provider=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider-2.0.10\\
-path_provider_android=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_android-2.0.14\\
-path_provider_ios=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_ios-2.0.9\\
-path_provider_linux=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_linux-2.1.6\\
-path_provider_macos=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_macos-2.0.6\\
-path_provider_windows=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_windows-2.0.6\\
-pdf_render=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\pdf_render-1.1.0\\
-printing=D:\\A\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\printing-5.9.0\\
+bluetooth_print=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\bluetooth_print-3.0.1\\
+fluttertoast=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\fluttertoast-8.0.9\\
+mobile_scanner=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\mobile_scanner-1.1.0\\
+path_provider=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider-2.0.10\\
+path_provider_android=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_android-2.0.14\\
+path_provider_ios=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_ios-2.0.9\\
+path_provider_linux=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_linux-2.1.6\\
+path_provider_macos=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_macos-2.0.6\\
+path_provider_windows=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_windows-2.0.6\\
+pdf_render=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\pdf_render-1.1.0\\
+printing=D:\\System\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\printing-5.9.0\\

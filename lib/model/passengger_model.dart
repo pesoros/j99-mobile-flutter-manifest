@@ -7,6 +7,8 @@ class PassenggerModel {
   String food_name;
   String baggage;
   String checkin_status;
+  String pickup_trip_location;
+  String drop_trip_location;
   String url_print;
 
   PassenggerModel({
@@ -16,6 +18,8 @@ class PassenggerModel {
     this.food_name,
     this.baggage,
     this.checkin_status,
+    this.pickup_trip_location,
+    this.drop_trip_location,
     this.url_print,
   });
 
@@ -26,6 +30,8 @@ class PassenggerModel {
     food_name = json['food_name'];
     baggage = json['baggage'];
     checkin_status = json['checkin_status'];
+    pickup_trip_location = json['pickup_trip_location'];
+    drop_trip_location = json['drop_trip_location'];
     url_print = json['url_print'];
   }
 
@@ -37,6 +43,8 @@ class PassenggerModel {
     data['food_name'] = this.food_name;
     data['baggage'] = this.baggage;
     data['checkin_status'] = this.checkin_status;
+    data['pickup_trip_location'] = this.pickup_trip_location;
+    data['drop_trip_location'] = this.drop_trip_location;
     data['url_print'] = this.url_print;
 
     return data;

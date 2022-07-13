@@ -18,7 +18,7 @@ class PassanggerList {
       "tripIdNo": variable.trip_id_no,
       "tripDate": variable.trip_date,
     });
-
+    print(response.body);
     List<PassenggerModel> list = [];
 
     for (var data in jsonDecode(response.body)['data'] as List) {

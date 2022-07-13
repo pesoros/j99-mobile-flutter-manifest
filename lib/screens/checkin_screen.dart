@@ -36,10 +36,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
   TextEditingController ticketNumber = TextEditingController();
   List<PassenggerModel> _listPassengger = [];
   bool isLoading = true;
+  double printWidth = 500;
+  double printHeight = 1500;
 
   bool secondPrint = false;
-
-  double papperResolution = 500;
 
   @override
   void initState() {
@@ -100,15 +100,16 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
     PdfDocument doc = await PdfDocument.openData(response.bodyBytes);
     int pageCount = doc.pageCount;
+    print(pageCount.toString());
 
     if (pageCount == 1) {
       PdfPage page = await doc.getPage(1);
       PdfPageImage pageImage = await page.render(
         backgroundFill: true,
-        width: 500,
-        height: 1500,
-        fullWidth: 500,
-        fullHeight: 1500,
+        width: printWidth.toInt(),
+        height: printHeight.toInt(),
+        fullWidth: printWidth,
+        fullHeight: printHeight,
       );
       var img = await pageImage.createImageIfNotAvailable();
 
@@ -122,16 +123,18 @@ class _CheckinScreenState extends State<CheckinScreen> {
       list.add(LineText(
         type: LineText.TYPE_IMAGE,
         content: base64Image,
+        align: LineText.ALIGN_CENTER,
+        linefeed: 1,
       ));
       await bluetoothPrint.printReceipt(config, list);
     } else {
       PdfPage page = await doc.getPage(1);
       PdfPageImage pageImage = await page.render(
         backgroundFill: true,
-        width: 500,
-        height: 1500,
-        fullWidth: 500,
-        fullHeight: 1500,
+        width: printWidth.toInt(),
+        height: printHeight.toInt(),
+        fullWidth: printWidth,
+        fullHeight: printHeight,
       );
       var img = await pageImage.createImageIfNotAvailable();
 
@@ -145,6 +148,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
       list.add(LineText(
         type: LineText.TYPE_IMAGE,
         content: base64Image,
+        align: LineText.ALIGN_CENTER,
+        linefeed: 1,
       ));
       await bluetoothPrint.printReceipt(config, list);
     }
@@ -161,10 +166,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
     PdfPage page = await doc.getPage(2);
     PdfPageImage pageImage = await page.render(
       backgroundFill: true,
-      width: 2000,
-      height: 4000,
-      fullWidth: 2000,
-      fullHeight: 4000,
+      width: printWidth.toInt(),
+      height: printHeight.toInt(),
+      fullWidth: printWidth,
+      fullHeight: printHeight,
     );
     var img = await pageImage.createImageIfNotAvailable();
 
@@ -178,6 +183,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
     list.add(LineText(
       type: LineText.TYPE_IMAGE,
       content: base64Image,
+      align: LineText.ALIGN_CENTER,
+      linefeed: 1,
     ));
     await bluetoothPrint.printReceipt(config, list);
   }
@@ -444,6 +451,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
               passengger.food_name,
               passengger.baggage,
               passengger.checkin_status,
+              passengger.pickup_trip_location,
+              passengger.drop_trip_location,
               passengger.url_print,
             ));
       },
@@ -458,6 +467,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
     String food_name,
     String baggage,
     String checkin_status,
+    String pickup_trip_location,
+    String drop_trip_location,
     String url_print,
   ) {
     return Container(
@@ -502,6 +513,15 @@ class _CheckinScreenState extends State<CheckinScreen> {
                     ),
                     Text(
                       "Bagasi: " + baggage,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      "Trip: " +
+                          pickup_trip_location +
+                          " - " +
+                          drop_trip_location,
                       style: TextStyle(
                         color: Colors.white,
                       ),
