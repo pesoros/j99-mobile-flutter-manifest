@@ -454,6 +454,9 @@ class _CheckinScreenState extends State<CheckinScreen> {
               passengger.pickup_trip_location,
               passengger.drop_trip_location,
               passengger.url_print,
+              passengger.dep_time,
+              passengger.dep_time,
+              passengger.kelas,
             ));
       },
     ));
@@ -470,6 +473,9 @@ class _CheckinScreenState extends State<CheckinScreen> {
     String pickup_trip_location,
     String drop_trip_location,
     String url_print,
+    String dep_time,
+    String arr_time,
+    String kelas,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -500,7 +506,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                       ),
                     ),
                     Text(
-                      "No. Kursi: " + seat_number,
+                      "No. Kursi: " + kelas + " - " + seat_number,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -518,10 +524,13 @@ class _CheckinScreenState extends State<CheckinScreen> {
                       ),
                     ),
                     Text(
-                      "Trip: " +
-                          pickup_trip_location +
-                          " - " +
-                          drop_trip_location,
+                      "Asal: " + pickup_trip_location + " - " + dep_time,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      "Tujuan: " + drop_trip_location + " - " + arr_time,
                       style: TextStyle(
                         color: Colors.white,
                       ),

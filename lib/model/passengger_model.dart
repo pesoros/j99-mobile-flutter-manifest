@@ -10,6 +10,9 @@ class PassenggerModel {
   String pickup_trip_location;
   String drop_trip_location;
   String url_print;
+  String dep_time;
+  String arr_time;
+  String kelas;
 
   PassenggerModel({
     this.name,
@@ -21,6 +24,9 @@ class PassenggerModel {
     this.pickup_trip_location,
     this.drop_trip_location,
     this.url_print,
+    this.dep_time,
+    this.arr_time,
+    this.kelas,
   });
 
   PassenggerModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +39,9 @@ class PassenggerModel {
     pickup_trip_location = json['pickup_trip_location'];
     drop_trip_location = json['drop_trip_location'];
     url_print = json['url_print'];
+    dep_time = json['dep_time'];
+    arr_time = json['arr_time'];
+    kelas = json['class'];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +55,9 @@ class PassenggerModel {
     data['pickup_trip_location'] = this.pickup_trip_location;
     data['drop_trip_location'] = this.drop_trip_location;
     data['url_print'] = this.url_print;
+    data['dep_time'] = this.dep_time;
+    data['arr_time'] = this.arr_time;
+    data['class'] = this.kelas;
 
     return data;
   }
