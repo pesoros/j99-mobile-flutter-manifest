@@ -36,8 +36,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
   TextEditingController ticketNumber = TextEditingController();
   List<PassenggerModel> _listPassengger = [];
   bool isLoading = true;
-  double printWidth = 500;
-  double printHeight = 1500;
+  double printWidth = 1000;
+  double printHeight = 1960;
 
   bool secondPrint = false;
 
