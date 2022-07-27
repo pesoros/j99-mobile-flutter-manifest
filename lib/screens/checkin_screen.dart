@@ -455,7 +455,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
               passengger.drop_trip_location,
               passengger.url_print,
               passengger.dep_time,
-              passengger.dep_time,
+              passengger.arr_time,
               passengger.kelas,
             ));
       },
