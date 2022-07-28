@@ -495,12 +495,12 @@ class _CheckinScreenState extends State<CheckinScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Nama: " + name,
+                      "Nama: " + name ?? "",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "No. Tiket: " + ticket_number,
+                      "No. Tiket: " + ticket_number ?? "",
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -512,13 +512,13 @@ class _CheckinScreenState extends State<CheckinScreen> {
                       ),
                     ),
                     Text(
-                      "Makanan: " + food_name,
+                      "Makanan: $food_name" ?? "Makanan: ",
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
                     Text(
-                      "Bagasi: " + baggage,
+                      "Bagasi: " + baggage ?? "",
                       style: TextStyle(
                         color: Colors.white,
                       ),
